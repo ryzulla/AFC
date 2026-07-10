@@ -32,4 +32,9 @@ class Inbox_model extends CI_Model{
 		$this->db->where('inbox_id', $inbox_id);
 		$this->db->delete('tbl_inbox');
 	}
+
+	function delete_all_inbox($inbox_ids){
+		$this->db->where_in('inbox_id', $inbox_ids);
+		$this->db->delete('tbl_inbox');
+	}
 }

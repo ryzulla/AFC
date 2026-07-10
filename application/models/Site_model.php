@@ -7,7 +7,7 @@ class Site_model extends CI_Model{
 		return $query;
 	}
 
-	function update_information($site_id,$site_name,$site_title,$site_description,$logo_header,$logo_footer,$logo_big,$facebook,$twitter,$linkedin,$instagram,$pinterest){
+	function update_information($site_id,$site_name,$site_title,$site_description,$logo_header,$logo_footer,$logo_big,$facebook,$twitter,$linkedin,$instagram,$pinterest,$tiktok,$youtube,$whatsapp,$maps,$address){
 		$this->db->set('site_name',$site_name);
 		$this->db->set('site_title',$site_title);
 		$this->db->set('site_description',$site_description);
@@ -19,12 +19,17 @@ class Site_model extends CI_Model{
 		$this->db->set('site_instagram',$instagram);
 		$this->db->set('site_pinterest',$pinterest);
 		$this->db->set('site_linkedin',$linkedin);
+		$this->db->set('site_tiktok',$tiktok);
+		$this->db->set('site_youtube',$youtube);
+		$this->db->set('site_whatsapp',$whatsapp);
+		$this->db->set('site_maps',$maps);
+		$this->db->set('site_address',$address);
 		$this->db->where('site_id',$site_id);
 		$this->db->update('tbl_site');
 	}
 
 
-	function update_information_header_icon($site_id,$site_name,$site_title,$site_description,$logo_header,$logo_footer,$facebook,$twitter,$linkedin,$instagram,$pinterest){
+	function update_information_header_icon($site_id,$site_name,$site_title,$site_description,$logo_header,$logo_footer,$facebook,$twitter,$linkedin,$instagram,$pinterest,$tiktok,$youtube,$whatsapp,$maps,$address){
 		$this->db->set('site_name',$site_name);
 		$this->db->set('site_title',$site_title);
 		$this->db->set('site_description',$site_description);
@@ -35,11 +40,16 @@ class Site_model extends CI_Model{
 		$this->db->set('site_instagram',$instagram);
 		$this->db->set('site_pinterest',$pinterest);
 		$this->db->set('site_linkedin',$linkedin);
+		$this->db->set('site_tiktok',$tiktok);
+		$this->db->set('site_youtube',$youtube);
+		$this->db->set('site_whatsapp',$whatsapp);
+		$this->db->set('site_maps',$maps);
+		$this->db->set('site_address',$address);
 		$this->db->where('site_id',$site_id);
 		$this->db->update('tbl_site');
 	}
 
-	function update_information_big_icon($site_id,$site_name,$site_title,$site_description,$logo_big,$logo_footer,$facebook,$twitter,$linkedin,$instagram,$pinterest){
+	function update_information_big_icon($site_id,$site_name,$site_title,$site_description,$logo_big,$logo_footer,$facebook,$twitter,$linkedin,$instagram,$pinterest,$tiktok,$youtube,$whatsapp,$maps,$address){
 		$this->db->set('site_name',$site_name);
 		$this->db->set('site_title',$site_title);
 		$this->db->set('site_description',$site_description);
@@ -50,11 +60,16 @@ class Site_model extends CI_Model{
 		$this->db->set('site_instagram',$instagram);
 		$this->db->set('site_pinterest',$pinterest);
 		$this->db->set('site_linkedin',$linkedin);
+		$this->db->set('site_tiktok',$tiktok);
+		$this->db->set('site_youtube',$youtube);
+		$this->db->set('site_whatsapp',$whatsapp);
+		$this->db->set('site_maps',$maps);
+		$this->db->set('site_address',$address);
 		$this->db->where('site_id',$site_id);
 		$this->db->update('tbl_site');
 	}
 
-	function update_information_big_header($site_id,$site_name,$site_title,$site_description,$logo_big,$logo_header,$facebook,$twitter,$linkedin,$instagram,$pinterest){
+	function update_information_big_header($site_id,$site_name,$site_title,$site_description,$logo_big,$logo_header,$facebook,$twitter,$linkedin,$instagram,$pinterest,$tiktok,$youtube,$whatsapp,$maps,$address){
 		$this->db->set('site_name',$site_name);
 		$this->db->set('site_title',$site_title);
 		$this->db->set('site_description',$site_description);
@@ -65,11 +80,16 @@ class Site_model extends CI_Model{
 		$this->db->set('site_instagram',$instagram);
 		$this->db->set('site_pinterest',$pinterest);
 		$this->db->set('site_linkedin',$linkedin);
+		$this->db->set('site_tiktok',$tiktok);
+		$this->db->set('site_youtube',$youtube);
+		$this->db->set('site_whatsapp',$whatsapp);
+		$this->db->set('site_maps',$maps);
+		$this->db->set('site_address',$address);
 		$this->db->where('site_id',$site_id);
 		$this->db->update('tbl_site');
 	}
 
-	function update_information_header($site_id,$site_name,$site_title,$site_description,$logo_header,$facebook,$twitter,$linkedin,$instagram,$pinterest){
+	function update_information_header($site_id,$site_name,$site_title,$site_description,$logo_header,$facebook,$twitter,$linkedin,$instagram,$pinterest,$tiktok,$youtube,$whatsapp,$maps,$address){
 		$this->db->set('site_name',$site_name);
 		$this->db->set('site_title',$site_title);
 		$this->db->set('site_description',$site_description);
@@ -79,11 +99,16 @@ class Site_model extends CI_Model{
 		$this->db->set('site_instagram',$instagram);
 		$this->db->set('site_pinterest',$pinterest);
 		$this->db->set('site_linkedin',$linkedin);
+		$this->db->set('site_tiktok',$tiktok);
+		$this->db->set('site_youtube',$youtube);
+		$this->db->set('site_whatsapp',$whatsapp);
+		$this->db->set('site_maps',$maps);
+		$this->db->set('site_address',$address);
 		$this->db->where('site_id',$site_id);
 		$this->db->update('tbl_site');
 	}
 
-	function update_information_footer($site_id,$site_name,$site_title,$site_description,$logo_footer,$facebook,$twitter,$linkedin,$instagram,$pinterest){
+	function update_information_footer($site_id,$site_name,$site_title,$site_description,$logo_footer,$facebook,$twitter,$linkedin,$instagram,$pinterest,$tiktok,$youtube,$whatsapp,$maps,$address){
 		$this->db->set('site_name',$site_name);
 		$this->db->set('site_title',$site_title);
 		$this->db->set('site_description',$site_description);
@@ -93,11 +118,16 @@ class Site_model extends CI_Model{
 		$this->db->set('site_instagram',$instagram);
 		$this->db->set('site_pinterest',$pinterest);
 		$this->db->set('site_linkedin',$linkedin);
+		$this->db->set('site_tiktok',$tiktok);
+		$this->db->set('site_youtube',$youtube);
+		$this->db->set('site_whatsapp',$whatsapp);
+		$this->db->set('site_maps',$maps);
+		$this->db->set('site_address',$address);
 		$this->db->where('site_id',$site_id);
 		$this->db->update('tbl_site');
 	}
 
-	function update_information_big($site_id,$site_name,$site_title,$site_description,$logo_big,$facebook,$twitter,$linkedin,$instagram,$pinterest){
+	function update_information_big($site_id,$site_name,$site_title,$site_description,$logo_big,$facebook,$twitter,$linkedin,$instagram,$pinterest,$tiktok,$youtube,$whatsapp,$maps,$address){
 		$this->db->set('site_name',$site_name);
 		$this->db->set('site_title',$site_title);
 		$this->db->set('site_description',$site_description);
@@ -107,11 +137,16 @@ class Site_model extends CI_Model{
 		$this->db->set('site_instagram',$instagram);
 		$this->db->set('site_pinterest',$pinterest);
 		$this->db->set('site_linkedin',$linkedin);
+		$this->db->set('site_tiktok',$tiktok);
+		$this->db->set('site_youtube',$youtube);
+		$this->db->set('site_whatsapp',$whatsapp);
+		$this->db->set('site_maps',$maps);
+		$this->db->set('site_address',$address);
 		$this->db->where('site_id',$site_id);
 		$this->db->update('tbl_site');
 	}
 
-	function update_information_nologo($site_id,$site_name,$site_title,$site_description,$facebook,$twitter,$linkedin,$instagram,$pinterest){
+	function update_information_nologo($site_id,$site_name,$site_title,$site_description,$facebook,$twitter,$linkedin,$instagram,$pinterest,$tiktok,$youtube,$whatsapp,$maps,$address){
 		$this->db->set('site_name',$site_name);
 		$this->db->set('site_title',$site_title);
 		$this->db->set('site_description',$site_description);
@@ -120,6 +155,11 @@ class Site_model extends CI_Model{
 		$this->db->set('site_instagram',$instagram);
 		$this->db->set('site_pinterest',$pinterest);
 		$this->db->set('site_linkedin',$linkedin);
+		$this->db->set('site_tiktok',$tiktok);
+		$this->db->set('site_youtube',$youtube);
+		$this->db->set('site_whatsapp',$whatsapp);
+		$this->db->set('site_maps',$maps);
+		$this->db->set('site_address',$address);
 		$this->db->where('site_id',$site_id);
 		$this->db->update('tbl_site');
 	}

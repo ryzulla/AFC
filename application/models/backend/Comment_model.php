@@ -54,6 +54,15 @@ class Comment_model extends CI_Model{
 		$this->db->trans_complete();
 	}
 
+	function delete_all_comment($comment_ids){
+		$this->db->trans_start();
+			$this->db->where_in('comment_parent', $comment_ids);
+			$this->db->delete('tbl_comment_product');
+			$this->db->where_in('comment_id', $comment_ids);
+			$this->db->delete('tbl_comment_product');
+		$this->db->trans_complete();
+	}
+
 	function change_image($id,$name,$email,$image){
 		$this->db->set('comment_name', $name);
 		$this->db->set('comment_email', $email);

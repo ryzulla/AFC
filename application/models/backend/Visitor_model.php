@@ -2,14 +2,15 @@
 class Visitor_model extends CI_Model{
 	
 	function visitor_statistics(){
-        $query = $this->db->query("SELECT DATE_FORMAT(visit_date,'%d') AS tgl,COUNT(visit_ip) AS jumlah FROM tbl_visitors WHERE MONTH(visit_date)=MONTH(CURDATE()) GROUP BY DATE(visit_date)");
+        $query = $this->db->query("SELECT DATE_FORMAT(visit_date,'%d') AS tgl,COUNT(visit_ip) AS jumlah FROM tbl_visitors WHERE MONTH(visit_date)=MONTH(CURDATE()) GROUP BY DATE_FORMAT(visit_date,'%d')");
 
+        $result = array();
         if($query->num_rows() > 0){
             foreach($query->result() as $data){
                 $result[] = $data;
             }
-            return $result;
         }
+        return $result;
     }
 
     function count_all_visitors(){

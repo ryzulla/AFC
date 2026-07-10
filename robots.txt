@@ -1,0 +1,13 @@
+User-agent: *
+Allow: /
+
+# Blokir area admin & sistem dari indexing
+Disallow: /backend
+Disallow: /backend/
+Disallow: /system/
+Disallow: /application/
+Disallow: /assets/
+Disallow: /search
+Disallow: /*?search_query=
+
+Sitemap: https://afcstoreindo.com/sitemap

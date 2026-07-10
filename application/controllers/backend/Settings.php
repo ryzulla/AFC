@@ -27,7 +27,17 @@ class Settings extends CI_Controller{
 		$data['site_instagram'] = $result['site_instagram'];
 		$data['site_pinterest'] = $result['site_pinterest'];
 		$data['site_linkedin'] = $result['site_linkedin'];
-		$this->load->view('backend/v_settings',$data);
+		$data['site_tiktok'] = $result['site_tiktok'];
+		$data['site_youtube'] = $result['site_youtube'];
+		$data['site_whatsapp'] = $result['site_whatsapp'];
+		$data['site_maps'] = $result['site_maps'];
+		$data['site_address'] = $result['site_address'];
+		$data['title'] = 'Settings';
+		$data['menu'] = 'settings';
+		$data['submenu'] = 'settings';
+		$this->load->view('backend/v_header', $data);
+		$this->load->view('backend/v_settings', $data);
+		$this->load->view('backend/v_footer');
 	}
 
 	function update(){
@@ -40,6 +50,11 @@ class Settings extends CI_Controller{
 		$linkedin = htmlspecialchars($this->input->post('linkedin',TRUE),ENT_QUOTES);
 		$instagram = htmlspecialchars($this->input->post('instagram',TRUE),ENT_QUOTES);
 		$pinterest = htmlspecialchars($this->input->post('pinterest',TRUE),ENT_QUOTES);
+		$tiktok = htmlspecialchars($this->input->post('tiktok',TRUE),ENT_QUOTES);
+		$youtube = htmlspecialchars($this->input->post('youtube',TRUE),ENT_QUOTES);
+		$whatsapp = htmlspecialchars($this->input->post('whatsapp',TRUE),ENT_QUOTES);
+		$maps = htmlspecialchars($this->input->post('maps',TRUE),ENT_QUOTES);
+		$address = htmlspecialchars($this->input->post('address',TRUE),ENT_QUOTES);
 	
 		$config['upload_path'] = './theme/images/';
 	    $config['allowed_types'] = 'gif|jpg|png|jpeg|bmp';
@@ -59,7 +74,7 @@ class Settings extends CI_Controller{
 	            $img_big = $this->upload->data();
 	            $logo_big=$img_big['file_name'];
 	        }
-	        $this->site_model->update_information($site_id,$site_name,$site_title,$site_description,$logo_header,$logo_footer,$logo_big,$facebook,$twitter,$linkedin,$instagram,$pinterest);
+	        $this->site_model->update_information($site_id,$site_name,$site_title,$site_description,$logo_header,$logo_footer,$logo_big,$facebook,$twitter,$linkedin,$instagram,$pinterest,$tiktok,$youtube,$whatsapp,$maps,$address);
 	        $this->session->set_flashdata('msg','success');
 	        redirect('backend/settings');
 
@@ -72,7 +87,7 @@ class Settings extends CI_Controller{
 	            $img_footer = $this->upload->data();
 	            $logo_footer=$img_footer['file_name'];
 	        }
-	        $this->site_model->update_information_header_icon($site_id,$site_name,$site_title,$site_description,$logo_header,$logo_footer,$facebook,$twitter,$linkedin,$instagram,$pinterest);
+	        $this->site_model->update_information_header_icon($site_id,$site_name,$site_title,$site_description,$logo_header,$logo_footer,$facebook,$twitter,$linkedin,$instagram,$pinterest,$tiktok,$youtube,$whatsapp,$maps,$address);
 	        $this->session->set_flashdata('msg','success');
 	        redirect('backend/settings');
 
@@ -85,7 +100,7 @@ class Settings extends CI_Controller{
 	            $img_footer = $this->upload->data();
 	            $logo_footer=$img_footer['file_name'];
 	        }
-	        $this->site_model->update_information_big_icon($site_id,$site_name,$site_title,$site_description,$logo_big,$logo_footer,$facebook,$twitter,$linkedin,$instagram,$pinterest);
+	        $this->site_model->update_information_big_icon($site_id,$site_name,$site_title,$site_description,$logo_big,$logo_footer,$facebook,$twitter,$linkedin,$instagram,$pinterest,$tiktok,$youtube,$whatsapp,$maps,$address);
 	        $this->session->set_flashdata('msg','success');
 	        redirect('backend/settings');
 
@@ -98,7 +113,7 @@ class Settings extends CI_Controller{
 	            $img_header = $this->upload->data();
 	            $logo_header=$img_header['file_name'];
 	        }
-	        $this->site_model->update_information_big_header($site_id,$site_name,$site_title,$site_description,$logo_big,$logo_header,$facebook,$twitter,$linkedin,$instagram,$pinterest);
+	        $this->site_model->update_information_big_header($site_id,$site_name,$site_title,$site_description,$logo_big,$logo_header,$facebook,$twitter,$linkedin,$instagram,$pinterest,$tiktok,$youtube,$whatsapp,$maps,$address);
 	        $this->session->set_flashdata('msg','success');
 	        redirect('backend/settings');
 
@@ -107,7 +122,7 @@ class Settings extends CI_Controller{
 	            $img_header = $this->upload->data();
 	            $logo_header=$img_header['file_name'];
 	        }
-	        $this->site_model->update_information_header($site_id,$site_name,$site_title,$site_description,$logo_header,$facebook,$twitter,$linkedin,$instagram,$pinterest);
+	        $this->site_model->update_information_header($site_id,$site_name,$site_title,$site_description,$logo_header,$facebook,$twitter,$linkedin,$instagram,$pinterest,$tiktok,$youtube,$whatsapp,$maps,$address);
 	        $this->session->set_flashdata('msg','success');
 	        redirect('backend/settings');
 
@@ -116,7 +131,7 @@ class Settings extends CI_Controller{
 	            $img_footer = $this->upload->data();
 	            $logo_footer=$img_footer['file_name'];
 	        }
-	        $this->site_model->update_information_footer($site_id,$site_name,$site_title,$site_description,$logo_footer,$facebook,$twitter,$linkedin,$instagram,$pinterest);
+	        $this->site_model->update_information_footer($site_id,$site_name,$site_title,$site_description,$logo_footer,$facebook,$twitter,$linkedin,$instagram,$pinterest,$tiktok,$youtube,$whatsapp,$maps,$address);
 	        $this->session->set_flashdata('msg','success');
 	        redirect('backend/settings');
 
@@ -125,12 +140,12 @@ class Settings extends CI_Controller{
 	            $img_big = $this->upload->data();
 	            $logo_big=$img_big['file_name'];
 	        }
-	        $this->site_model->update_information_big($site_id,$site_name,$site_title,$site_description,$logo_big,$facebook,$twitter,$linkedin,$instagram,$pinterest);
+	        $this->site_model->update_information_big($site_id,$site_name,$site_title,$site_description,$logo_big,$facebook,$twitter,$linkedin,$instagram,$pinterest,$tiktok,$youtube,$whatsapp,$maps,$address);
 	        $this->session->set_flashdata('msg','success');
 	        redirect('backend/settings');
 
 	    }else{
-	    	$this->site_model->update_information_nologo($site_id,$site_name,$site_title,$site_description,$facebook,$twitter,$linkedin,$instagram,$pinterest);
+	    	$this->site_model->update_information_nologo($site_id,$site_name,$site_title,$site_description,$facebook,$twitter,$linkedin,$instagram,$pinterest,$tiktok,$youtube,$whatsapp,$maps,$address);
 	        $this->session->set_flashdata('msg','success');
 	        redirect('backend/settings');
 	    }

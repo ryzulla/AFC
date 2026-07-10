@@ -11,29 +11,30 @@ class Product_model extends CI_Model{
 		return $result;
 	}
 
-	function save_product($title,$price,$contents,$category,$slug,$image,$tags,$description){
+	function save_product($title,$price,$contents,$category,$slug,$image,$tags,$description,$keyword_focus){
 		$data = array(
-	        'product_title' 	   => $title,
-            'product_price' 	   => $price,
-	        'product_description' => $description,
-	        'product_contents'    => $contents,
-	        'product_image' 	   => $image,
-	        'product_category_id' => $category,
-	        'product_tags' 	   => $tags,   
-	        'product_slug' 	   => $slug,
-	        'product_status' 	   => 1,
-	        'product_user_id'	   => $this->session->userdata('id')
+	        'product_title' 	     => $title,
+            'product_price' 	     => $price,
+	        'product_description'    => $description,
+	        'product_keyword_focus'  => $keyword_focus,
+	        'product_contents'       => $contents,
+	        'product_image' 	     => $image,
+	        'product_category_id'    => $category,
+	        'product_tags' 	         => $tags,   
+	        'product_slug' 	         => $slug,
+	        'product_status' 	     => 1,
+	        'product_user_id'	     => $this->session->userdata('id')
 		);
 		$this->db->insert('tbl_product', $data);
 	}
 
-	function edit_product_with_img($id,$title,$price,$contents,$category,$slug,$image,$tags,$description){
-		$result = $this->db->query("UPDATE tbl_product SET product_title='$title',product_price='$price',product_description='$description',product_contents='$contents',product_image='$image',product_last_update=NOW(),product_category_id='$category',product_tags='$tags',product_slug='$slug' WHERE product_id='$id'");
+	function edit_product_with_img($id,$title,$price,$contents,$category,$slug,$image,$tags,$description,$keyword_focus){
+		$result = $this->db->query("UPDATE tbl_product SET product_title='$title',product_price='$price',product_description='$description',product_keyword_focus='$keyword_focus',product_contents='$contents',product_image='$image',product_last_update=NOW(),product_category_id='$category',product_tags='$tags',product_slug='$slug' WHERE product_id='$id'");
 		return $result;
 	}
 
-	function edit_product_no_img($id,$title,$price,$contents,$category,$slug,$tags,$description){
-		$result = $this->db->query("UPDATE tbl_product SET product_title='$title',product_price='$price',product_description='$description',product_contents='$contents',product_last_update=NOW(),product_category_id='$category',product_tags='$tags',product_slug='$slug' WHERE product_id='$id'");
+	function edit_product_no_img($id,$title,$price,$contents,$category,$slug,$tags,$description,$keyword_focus){
+		$result = $this->db->query("UPDATE tbl_product SET product_title='$title',product_price='$price',product_description='$description',product_keyword_focus='$keyword_focus',product_contents='$contents',product_last_update=NOW(),product_category_id='$category',product_tags='$tags',product_slug='$slug' WHERE product_id='$id'");
 		return $result;
 	}
 

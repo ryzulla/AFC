@@ -61,7 +61,8 @@ class Category extends CI_Controller{
 	        $x['page'] =$this->pagination->create_links();
 			$x['data']=$this->category_model->blog_category_perpage($category_id,$offset,$limit);
 			$x['judul']= $kategori_nama;
-			$x['description']= "Kumpulan artikel ".$kategori_nama." yang bermanfaat untuk menambah wawasan Anda.";
+			$cat_desc = $q['category_description'];
+			$x['description']= !empty($cat_desc) ? $cat_desc : "Kumpulan artikel ".$kategori_nama." yang bermanfaat untuk menambah wawasan Anda.";
 			if(empty($this->uri->segment(3))){
 				$next_page=2;
 				$x['canonical']=site_url('category/'.$slug);
@@ -81,7 +82,9 @@ class Category extends CI_Controller{
 				$x['url_prev']=site_url('category/'.$slug.'/'.$prev_page);
 			}
 			
-			$x['url_next']=site_url('category/'.$slug.'/'.$next_page);
+			$total_pages = ceil($config['total_rows'] / $limit);
+			$x['url_next'] = ($next_page <= $total_pages) ? site_url('category/'.$slug.'/'.$next_page) : '';
+			$x['robots'] = ($page > 1) ? 'noindex,follow' : 'index,follow';
 			$x['populer_post'] = $this->blog_model->get_popular_post();
 			$site_info = $this->db->get('tbl_site', 1)->row();
 			$v['logo'] =  $site_info->site_logo_header;

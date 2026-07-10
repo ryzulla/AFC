@@ -16,6 +16,9 @@ class About extends CI_Controller{
 		$data['about_desc'] = $about->about_description;
 		$v['logo'] =  $site_info->site_logo_header;
 		$data['icon'] = $site_info->site_favicon;
+		$data['site_image'] = $site_info->site_logo_big;
+		$data['site_name'] = $site_info->site_name;
+		$data['site_twitter'] = $site_info->site_twitter;
 		$data['header'] = $this->load->view('header',$v,TRUE);
 		$data['footer'] = $this->load->view('footer','',TRUE);
 		$this->load->view('about_view',$data);

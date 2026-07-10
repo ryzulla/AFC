@@ -12,13 +12,19 @@ class Tag extends CI_Controller{
 
 	function index(){
 		$x['data'] = $this->tag_model->get_all_tag();
-		$this->load->view('backend/v_tag',$x);
+		$x['title'] = 'Tags';
+		$x['menu'] = 'product';
+		$x['submenu'] = 'tag';
+		$this->load->view('backend/v_header', $x);
+		$this->load->view('backend/v_tag', $x);
+		$this->load->view('backend/v_footer');
 		$this->load->helper('text');
 	}
 
 	function save(){
 		$tag = strip_tags(htmlspecialchars($this->input->post('tag',TRUE),ENT_QUOTES));
-		$this->tag_model->add_new_row($tag);
+		$description = htmlspecialchars($this->input->post('description',TRUE),ENT_QUOTES);
+		$this->tag_model->add_new_row($tag,$description);
 		$this->session->set_flashdata('msg','success');
 		redirect('backend/tag');
 	}
@@ -26,7 +32,8 @@ class Tag extends CI_Controller{
 	function edit(){
 		$id		 = $this->input->post('kode',TRUE);
 		$tag 	 = strip_tags(htmlspecialchars($this->input->post('tag2',TRUE),ENT_QUOTES));
-		$this->tag_model->edit_row($id,$tag);
+		$description = htmlspecialchars($this->input->post('description2',TRUE),ENT_QUOTES);
+		$this->tag_model->edit_row($id,$tag,$description);
 		$this->session->set_flashdata('msg','info');
 		redirect('backend/tag');
 	}

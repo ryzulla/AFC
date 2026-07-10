@@ -20,7 +20,12 @@ class Home_setting extends CI_Controller{
 		$x['caption_2'] = $data->home_caption_2;
 		$x['image_heading'] = $data->home_bg_heading;
 		$x['image_testimonial'] = $data->home_bg_testimonial;
-		$this->load->view('backend/v_home_setting',$x);
+		$x['title'] = 'Home Setting';
+		$x['menu'] = 'settings';
+		$x['submenu'] = 'home_setting';
+		$this->load->view('backend/v_header', $x);
+		$this->load->view('backend/v_home_setting', $x);
+		$this->load->view('backend/v_footer');
 	}
 
 	function update(){

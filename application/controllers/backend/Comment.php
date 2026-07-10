@@ -8,12 +8,11 @@ class Comment extends CI_Controller{
         };
 		$this->load->model('backend/Comment_model','comment_model');
 		$this->load->library('upload');
-		error_reporting(0);
 		$this->load->helper('text');
 	}
 
 	function index(){
-		$count = $this->db->get_where('tbl_comment', array('comment_parent' => '0'));
+		$count = $this->db->get_where('tbl_comment_product', array('comment_parent' => '0'));
         $page = $this->uri->segment(4);
         if(!$page):
             $offset = 0;
@@ -50,8 +49,12 @@ class Comment extends CI_Controller{
         $data['page'] = $this->pagination->create_links();
 		$data['data'] = $this->comment_model->get_all_comment($offset,$limit);
 		$data['total_rows']=$count->num_rows();
-		$data['total_unpublish'] = $this->db->get_where('tbl_comment', array('comment_status' => '0'))->num_rows();
-		$this->load->view('backend/v_comment',$data);
+		$data['total_unpublish'] = $this->db->get_where('tbl_comment_product', array('comment_status' => '0'))->num_rows();
+		$data['title'] = 'Comments';
+		$data['menu'] = 'comment';
+		$this->load->view('backend/v_header', $data);
+		$this->load->view('backend/v_comment', $data);
+		$this->load->view('backend/v_footer');
 	}
 
 
@@ -124,6 +127,15 @@ class Comment extends CI_Controller{
 		redirect('backend/comment');
 	}
 
+	function delete_all(){
+		$comment_ids = $this->input->post('ids', TRUE);
+		if($comment_ids){
+			$this->comment_model->delete_all_comment($comment_ids);
+			$this->session->set_flashdata('msg','success-delete');
+		}
+		redirect('backend/comment/unpublish');
+	}
+
 	function change(){
 		if(isset($_FILES["file"]["name"])){
 			 $config['upload_path'] = './assets/images/';
@@ -164,7 +176,11 @@ class Comment extends CI_Controller{
 		if($data->num_rows() > 0){
 			$x['data'] = $data;
 			$x['total_rows']=$data->num_rows();
-			$this->load->view('backend/v_comment',$x);
+			$x['title'] = 'Search Comments';
+			$x['menu'] = 'comment';
+			$this->load->view('backend/v_header', $x);
+			$this->load->view('backend/v_comment', $x);
+			$this->load->view('backend/v_footer');
 		}else{
 			$this->session->set_flashdata('msg','info');
 			redirect('backend/comment');
@@ -173,7 +189,7 @@ class Comment extends CI_Controller{
 	}
 
 	function unpublish(){
-		$count = $this->db->get_where('tbl_comment', array('comment_status' => '0'));
+		$count = $this->db->get_where('tbl_comment_product', array('comment_status' => '0'));
         $page = $this->uri->segment(4);
         if(!$page):
             $offset = 0;
@@ -210,7 +226,12 @@ class Comment extends CI_Controller{
         $data['page'] = $this->pagination->create_links();
 		$data['data'] = $this->comment_model->get_all_comment_unpublish($offset,$limit);
 		$data['total_rows']=$count->num_rows();
-		$data['total_all'] = $this->db->get_where('tbl_comment', array('comment_parent' => '0'))->num_rows();
-		$this->load->view('backend/v_comment_unpublish',$data);
+		$data['total_all'] = $this->db->get_where('tbl_comment_product', array('comment_parent' => '0'))->num_rows();
+		$data['total_unpublish'] = $count->num_rows();
+		$data['title'] = 'Unpublish Comments';
+		$data['menu'] = 'comment';
+		$this->load->view('backend/v_header', $data);
+		$this->load->view('backend/v_comment_unpublish', $data);
+		$this->load->view('backend/v_footer');
 	}
 }

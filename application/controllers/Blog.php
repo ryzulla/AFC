@@ -10,6 +10,7 @@ class Blog extends CI_Controller {
 		$this->load->model('Site_model','site_model');
         $this->visitor_model->count_visitor();
         $this->load->helper('text');
+        $this->load->library('ip_blocker_lib', NULL, 'ip_blocker');
         error_reporting(0);
 	}
 	function index(){
@@ -52,7 +53,7 @@ class Blog extends CI_Controller {
 	    $x['page'] =$this->pagination->create_links();
 		$x['data']=$this->blog_model->get_blog_perpage($offset,$limit);
 		//print_r($this->db->last_query()); 
-		$x['judul']="Blog";
+		$x['judul']="Blog".($page > 1 ? ' - Halaman '.$page : '');
 		if(empty($this->uri->segment(3))){
 			$next_page=2;
 			$x['canonical']=site_url('blog');
@@ -72,7 +73,9 @@ class Blog extends CI_Controller {
 			$x['url_prev']=site_url('blog/page/'.$prev_page);
 		}
 		
-		$x['url_next']=site_url('blog/page/'.$next_page);
+		$total_pages = ceil($config['total_rows'] / $limit);
+		$x['url_next'] = ($next_page <= $total_pages) ? site_url('blog/page/'.$next_page) : '';
+		$x['robots'] = ($page > 1) ? 'noindex,follow' : 'index,follow';
 		$x['populer_post'] = $this->blog_model->get_popular_post();
 		$site_info = $this->db->get('tbl_site', 1)->row();
 		$v['logo'] =  $site_info->site_logo_header;
@@ -83,8 +86,6 @@ class Blog extends CI_Controller {
 		$site = $this->site_model->get_site_data()->row_array();
 		$x['site_name'] = $site['site_name'];
 		$x['site_twitter'] = $site['site_twitter'];
-		$query = $this->db->query("SELECT GROUP_CONCAT(category_name) AS category_name FROM tbl_category")->row_array();
-		$x['meta_description'] = $query['category_name'];
 		$this->load->view('blog_view',$x);
 	}
 
@@ -109,8 +110,9 @@ class Blog extends CI_Controller {
     		$x['category']=$q['category_name'];
     		$x['category_slug']=$q['category_slug'];
     		$x['date']=$q['post_date'];
-    		$x['tags']=$q['post_tags'];
-    		$x['post_id']=$kode;
+     		$x['tags']=$q['post_tags'];
+     		$x['keyword_focus']=$q['post_keyword_focus'];
+     		$x['post_id']=$kode;
     		$category_id = $q['category_id'];
     		$this->blog_model->count_views($kode);
     		$x['related_post']  = $this->blog_model->get_related_post($category_id,$kode);
@@ -118,6 +120,7 @@ class Blog extends CI_Controller {
     		$site_info = $this->db->get('tbl_site', 1)->row();
 			$v['logo'] =  $site_info->site_logo_header;
 			$x['icon'] = $site_info->site_favicon;
+			$x['site_image'] = $site_info->site_logo_big;
     		$x['header'] = $this->load->view('header',$v,TRUE);
     		$x['footer'] = $this->load->view('footer','',TRUE);
     		$site = $this->site_model->get_site_data()->row_array();
@@ -133,6 +136,11 @@ class Blog extends CI_Controller {
 
 
 	function submit_komentar(){
+		if (!$this->ip_blocker->check_and_register(3, 5)) {
+			$this->session->set_flashdata('msg','<div class="alert alert-danger">Terlalu banyak komentar. Silakan coba lagi nanti.</div>');
+			redirect('blog');
+			return;
+		}
     	$post_id = htmlspecialchars($this->input->post('post_id',TRUE),ENT_QUOTES);
     	$slug = htmlspecialchars($this->input->post('slug',TRUE),ENT_QUOTES);
 		$this->load->library('form_validation');
@@ -154,6 +162,11 @@ class Blog extends CI_Controller {
 	}
 
 	function subscribe(){
+		if (!$this->ip_blocker->check_and_register(3, 5)) {
+			$this->session->set_flashdata('msg','<div class="alert alert-danger">Terlalu banyak permintaan. Silakan coba lagi nanti.</div>');
+			redirect('/');
+			return;
+		}
 		$this->load->library('form_validation');
 		$this->form_validation->set_rules('email', 'Email', 'required|valid_email');
 		if ($this->form_validation->run() == FALSE){

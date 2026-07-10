@@ -8,9 +8,15 @@ class Subscribe extends CI_Controller {
 		$this->load->model('Subscribe_model','subscribe_model');
         $this->visitor_model->count_visitor();
         $this->load->helper('text');
+        $this->load->library('ip_blocker_lib', NULL, 'ip_blocker');
 	}
 
 	function index(){
+		if (!$this->ip_blocker->check_and_register(3, 5)) {
+			$this->session->set_flashdata('message','<div class="alert alert-danger">Terlalu banyak permintaan. Silakan coba lagi nanti.</div>');
+			redirect('/');
+			return;
+		}
 		$this->load->library('form_validation');
 		$url = $this->input->post('url',TRUE);
 		$this->form_validation->set_rules('email', 'Email', 'required|valid_email');

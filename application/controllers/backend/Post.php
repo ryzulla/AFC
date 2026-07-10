@@ -15,13 +15,23 @@ class Post extends CI_Controller{
 
 	function index(){
 		$x['data'] = $this->post_model->get_all_post();
-		$this->load->view('backend/v_post',$x);
+		$x['title'] = 'Post List';
+		$x['menu'] = 'post';
+		$x['submenu'] = 'post_list';
+		$this->load->view('backend/v_header', $x);
+		$this->load->view('backend/v_post', $x);
+		$this->load->view('backend/v_footer');
 	}
 
 	function add_new(){
 		$x['tag']	   = $this->tag_model->get_all_tag();
 		$x['category'] = $this->category_model->get_all_category();
-		$this->load->view('backend/v_add_post',$x);
+		$x['title'] = 'Add New Post';
+		$x['menu'] = 'post';
+		$x['submenu'] = 'post_add';
+		$this->load->view('backend/v_header', $x);
+		$this->load->view('backend/v_add_post', $x);
+		$this->load->view('backend/v_footer');
 	}
 
 	function get_edit(){
@@ -29,7 +39,12 @@ class Post extends CI_Controller{
 		$x['tag']	   = $this->tag_model->get_all_tag();
 		$x['category'] = $this->category_model->get_all_category();
 		$x['data'] = $this->post_model->get_post_by_id($post_id);
-		$this->load->view('backend/v_edit_post',$x);
+		$x['title'] = 'Edit Post';
+		$x['menu'] = 'post';
+		$x['submenu'] = 'post_add';
+		$this->load->view('backend/v_header', $x);
+		$this->load->view('backend/v_edit_post', $x);
+		$this->load->view('backend/v_footer');
 	}
 
 	function publish(){
@@ -62,9 +77,7 @@ class Post extends CI_Controller{
 				// $category = $this->input->post('category',TRUE);
 
 				$preslug  = strip_tags(htmlspecialchars($this->input->post('slug',TRUE),ENT_QUOTES));
-				$string   = preg_replace('/[^a-zA-Z0-9 \&%|{.}=,?!*()"-_+$@;<>\']/', '', $preslug);
-				$trim     = trim($string);
-				$praslug  = strtolower(str_replace(" ", "-", $trim));
+				$praslug  = url_title($preslug, '-', TRUE);
 				$query = $this->db->get_where('tbl_post', array('post_slug' => $praslug));
 				if($query->num_rows() > 0){
 					$uniqe_string = rand();
@@ -79,10 +92,15 @@ class Post extends CI_Controller{
 				// }
 
 				$description=htmlspecialchars($this->input->post('description',TRUE),ENT_QUOTES);
+				if(empty($description)){
+					$plain = strip_tags($contents);
+					$description = trim(substr($plain, 0, 160));
+					if(strlen($plain) > 160) $description .= '...';
+				}
 
-				// $this->post_model->save_post($title,$contents,$category,$slug,$image,$tags,$description);
+				$keyword_focus=htmlspecialchars($this->input->post('keyword_focus',TRUE),ENT_QUOTES);
 				
-				$this->post_model->save_post($title,$contents,$slug,$description);
+				$this->post_model->save_post($title,$contents,$slug,$description,$keyword_focus);
 				echo $this->session->set_flashdata('msg','success');
 				redirect('backend/post');
 			// }else{
@@ -160,9 +178,7 @@ class Post extends CI_Controller{
 			// $category = $this->input->post('category',TRUE);
 
 			$preslug  = strip_tags(htmlspecialchars($this->input->post('slug',TRUE),ENT_QUOTES));
-			$string   = preg_replace('/[^a-zA-Z0-9 \&%|{.}=,?!*()"-_+$@;<>\']/', '', $preslug);
-			$trim     = trim($string);
-			$praslug  = strtolower(str_replace(" ", "-", $trim));
+			$praslug  = url_title($preslug, '-', TRUE);
 
 			$query = $this->db->get_where('tbl_post', array('post_slug' => $praslug));
 			if($query->num_rows() > 1){
@@ -178,9 +194,15 @@ class Post extends CI_Controller{
 			// }
 
 			$description=htmlspecialchars($this->input->post('description',TRUE),ENT_QUOTES);
+			if(empty($description)){
+				$plain = strip_tags($contents);
+				$description = trim(substr($plain, 0, 160));
+				if(strlen($plain) > 160) $description .= '...';
+			}
 
-			// $this->post_model->edit_post_no_img($id,$title,$contents,$category,$slug,$tags,$description);
-			$this->post_model->edit_post_no_img($id,$title,$contents,$slug,$description);
+			$keyword_focus=htmlspecialchars($this->input->post('keyword_focus',TRUE),ENT_QUOTES);
+
+			$this->post_model->edit_post_no_img($id,$title,$contents,$slug,$description,$keyword_focus);
 			echo $this->session->set_flashdata('msg','info');
 			redirect('backend/post');
 		// }

@@ -14,7 +14,11 @@ class Users extends CI_Controller{
 
 	function index(){
 		$x['data']=$this->users_model->get_users();
-		$this->load->view('backend/v_users',$x);
+		$x['title'] = 'Users';
+		$x['menu'] = 'users';
+		$this->load->view('backend/v_header', $x);
+		$this->load->view('backend/v_users', $x);
+		$this->load->view('backend/v_footer');
 		$this->load->helper('text');
 	}
 

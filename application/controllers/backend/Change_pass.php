@@ -14,7 +14,11 @@ class Change_pass extends CI_Controller{
 	}
 
 	function index(){
+		$data['title'] = 'Change Password';
+		$data['menu'] = 'change_pass';
+		$this->load->view('backend/v_header', $data);
 		$this->load->view('backend/v_change_pass');
+		$this->load->view('backend/v_footer');
 	}
 
 	function change(){

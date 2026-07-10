@@ -1,3 +1,9 @@
+<?php
+$_site = $this->db->get('tbl_site', 1)->row();
+$wa_num = $_site->site_whatsapp ?: '628111797970';
+$wa_url = 'https://web.whatsapp.com/send?phone=+'.$wa_num.'&text=Hi, Saya ingin konsultasi';
+$site_addr = $_site->site_address ?: 'Jakarta Barat, DKI Jakarta';
+?>
 <section class="page-section subscribe-section small-section">
 	<div class="container">
 		<div class="row">
@@ -9,6 +15,7 @@
 					</div>
 					<div class="food-info-wrapper">
 						<p>Nikmati kemudahan bermitra dan berbelanja secara mudah dan aman di website kami</p><p><em><strong>"We Are Family and We Grow Together to Discover The Champion In You."&nbsp;&nbsp;</strong></em></p>
+						<p style="margin-top:10px;font-size:13px"><strong>AFC Store Indonesia</strong><br><?php echo nl2br(htmlspecialchars($site_addr)); ?><br>Telp: +628111797970</p>
 					</div>
 				</div>
 			</div>
@@ -52,15 +59,21 @@
 				</div>
 			</div>
 		</div>
+<?php
+$_site = $this->db->get('tbl_site', 1)->row();
+$wa_num = $_site->site_whatsapp ?: '628111797970';
+$wa_url = 'https://web.whatsapp.com/send?phone=+'.$wa_num.'&text=Hi, Saya ingin konsultasi';
+$site_addr = $_site->site_address ?: 'Jakarta Barat, DKI Jakarta';
+?>
 		<div class="footer-widget mb-30">
 					<div class="form-group" align="center">
 						<p>Contact us:</p>
-						<a href="https://web.whatsapp.com/send?phone=+628111797970&text=Hi, Saya ingin konsultasi" target="_blank"><img src="<?php echo base_url() . 'assets/images/sosmed/wa.webp'; ?>" style="width:45px" alt=""></a>
-						<a href="https://www.instagram.com/makanankesehatanganbarufam" target="_blank"><img src="<?php echo base_url() . 'assets/images/sosmed/ig.png'; ?>" style="width:45px" alt=""></a>
-						<a href="https://www.youtube.com/@SHEILASU1011" target="_blank"><img src="<?php echo base_url() . 'assets/images/sosmed/youtube.png'; ?>" style="width:45px" alt=""></a>
-						<a href="https://www.tiktok.com/@makanankesehatan_afc?_t=8Zh3s6z6N3B&_r=1" target="_blank"><img src="<?php echo base_url() . 'assets/images/sosmed/tiktok.png'; ?>" style="width:45px" alt=""></a>
-						<a href="https://www.facebook.com/MAKANANKESEHATANAFC?mibextid=LQQJ4d" target="_blank"><img src="<?php echo base_url() . 'assets/images/sosmed/fb.webp'; ?>" style="width:45px" alt=""></a>
-						<a href="https://goo.gl/maps/M45xtVejhoEDGMdv9" target="_blank"><img src="<?php echo base_url() . 'assets/images/sosmed/google-maps.png'; ?>" style="width:45px" alt=""></a>
+						<a href="<?php echo $wa_url; ?>" target="_blank"><img src="<?php echo base_url() . 'assets/images/sosmed/wa.webp'; ?>" style="width:45px" alt="WhatsApp AFC Store"></a>
+						<a href="<?php echo $_site->site_instagram ?: 'https://www.instagram.com/makanankesehatanganbarufam'; ?>" target="_blank"><img src="<?php echo base_url() . 'assets/images/sosmed/ig.png'; ?>" style="width:45px" alt="Instagram AFC Store"></a>
+						<a href="<?php echo $_site->site_youtube ?: 'https://www.youtube.com/@SHEILASU1011'; ?>" target="_blank"><img src="<?php echo base_url() . 'assets/images/sosmed/youtube.png'; ?>" style="width:45px" alt="YouTube AFC Store"></a>
+						<a href="<?php echo $_site->site_tiktok ?: 'https://www.tiktok.com/@makanankesehatan_afc'; ?>" target="_blank"><img src="<?php echo base_url() . 'assets/images/sosmed/tiktok.png'; ?>" style="width:45px" alt="TikTok AFC Store"></a>
+						<a href="<?php echo $_site->site_facebook ?: 'https://www.facebook.com/MAKANANKESEHATANAFC'; ?>" target="_blank"><img src="<?php echo base_url() . 'assets/images/sosmed/fb.webp'; ?>" style="width:45px" alt="Facebook AFC Store"></a>
+						<a href="<?php echo $_site->site_maps ?: 'https://goo.gl/maps/M45xtVejhoEDGMdv9'; ?>" target="_blank"><img src="<?php echo base_url() . 'assets/images/sosmed/google-maps.png'; ?>" style="width:45px" alt="Lokasi AFC Store di Google Maps"></a>
 					</div>
 				</div>
 	</div>

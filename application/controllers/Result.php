@@ -25,9 +25,17 @@ class Result extends CI_Controller{
 			$x['judul']= 'Hasil Pencarian : "Tidak Temukan"';
 		}
 		$x['populer_post'] = $this->blog_model->get_popular_post();
+		$x['meta_description'] = 'Hasil pencarian untuk "'.$query.'" di AFC Store Indonesia.';
+		$x['canonical'] = site_url('result?search_query='.urlencode($query));
+		$x['url_prev'] = '';
+		$x['url_next'] = '';
+		$x['robots'] = 'noindex,follow';
 		$site_info = $this->db->get('tbl_site', 1)->row();
 		$v['logo'] =  $site_info->site_logo_header;
 		$x['icon'] = $site_info->site_favicon;
+		$x['site_image'] = $site_info->site_logo_big;
+		$x['site_name'] = $site_info->site_name;
+		$x['site_twitter'] = $site_info->site_twitter;
 		$x['header'] = $this->load->view('header',$v,TRUE);
 		$x['footer'] = $this->load->view('footer','',TRUE);
 		$this->load->view('blog_search_view',$x);

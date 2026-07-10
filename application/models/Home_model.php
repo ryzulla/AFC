@@ -76,13 +76,11 @@ class Home_model extends CI_Model{
 	}
 
 	function checking_email($email){
-		$query = $this->db->query("SELECT * FROM tbl_subscribe WHERE subscribe_email='$email'");
-		return $query;
+		return $this->db->get_where('tbl_subscribe', array('subscribe_email' => $email));
 	}
 
 	function save_subcribe($email){
-		$query = $this->db->query("INSERT INTO tbl_subscribe (subscribe_email) VALUES ('$email')");
-		return $query;
+		$this->db->insert('tbl_subscribe', array('subscribe_email' => $email));
 	}
 	
 

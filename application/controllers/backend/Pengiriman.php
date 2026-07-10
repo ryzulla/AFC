@@ -13,19 +13,34 @@ class Pengiriman extends CI_Controller{
 
 	function index(){
 		$x['data'] = $this->pengiriman_model->get_all_pengiriman();
-		$this->load->view('backend/v_pengiriman',$x);
+		$x['title'] = 'Bukti Pengiriman';
+		$x['menu'] = 'settings';
+		$x['submenu'] = 'pengiriman';
+		$this->load->view('backend/v_header', $x);
+		$this->load->view('backend/v_pengiriman', $x);
+		$this->load->view('backend/v_footer');
 	}
 
 	function add_new(){
 		// $x['tag']	   = $this->tag_model->get_all_tag();
 		// $x['category'] = $this->category_model->get_all_category();
-		$this->load->view('backend/v_add_pengiriman',$x);
+		$x['title'] = 'Bukti Pengiriman';
+		$x['menu'] = 'settings';
+		$x['submenu'] = 'pengiriman';
+		$this->load->view('backend/v_header', $x);
+		$this->load->view('backend/v_add_pengiriman', $x);
+		$this->load->view('backend/v_footer');
 	}
 
 	function get_edit(){
 		$pengiriman_id = $this->uri->segment(4);
 		$x['data'] = $this->pengiriman_model->get_pengiriman_by_id($pengiriman_id);
-		$this->load->view('backend/v_edit_pengiriman',$x);
+		$x['title'] = 'Bukti Pengiriman';
+		$x['menu'] = 'settings';
+		$x['submenu'] = 'pengiriman';
+		$this->load->view('backend/v_header', $x);
+		$this->load->view('backend/v_edit_pengiriman', $x);
+		$this->load->view('backend/v_footer');
 	}
 
 	function publish(){

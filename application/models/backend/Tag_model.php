@@ -6,16 +6,18 @@ class Tag_model extends CI_Model{
 		return $result; 
 	}
 
-	function add_new_row($tag){
+	function add_new_row($tag,$description){
 		$data = array(
-	        'tag_name' => $tag
+	        'tag_name'        => $tag,
+	        'tag_description' => $description
 		);
 		$this->db->insert('tbl_tags', $data);
 	}
 
-	function edit_row($id,$tag){
+	function edit_row($id,$tag,$description){
 		$data = array(
-	        'tag_name' => $tag
+	        'tag_name'        => $tag,
+	        'tag_description' => $description
 		);
 		$this->db->where('tag_id', $id);
 		$this->db->update('tbl_tags', $data);

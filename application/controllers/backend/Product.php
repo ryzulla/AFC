@@ -15,13 +15,23 @@ class Product extends CI_Controller{
 
 	function index(){
 		$x['data'] = $this->product_model->get_all_product();
-		$this->load->view('backend/v_product',$x);
+		$x['title'] = 'Product List';
+		$x['menu'] = 'product';
+		$x['submenu'] = 'product_list';
+		$this->load->view('backend/v_header', $x);
+		$this->load->view('backend/v_product', $x);
+		$this->load->view('backend/v_footer');
 	}
 
 	function add_new(){
 		$x['tag']	   = $this->tag_model->get_all_tag();
 		$x['category'] = $this->category_model->get_all_category();
-		$this->load->view('backend/v_add_product',$x);
+		$x['title'] = 'Add New Product';
+		$x['menu'] = 'product';
+		$x['submenu'] = 'product_add';
+		$this->load->view('backend/v_header', $x);
+		$this->load->view('backend/v_add_product', $x);
+		$this->load->view('backend/v_footer');
 	}
 
 	function get_edit(){
@@ -29,7 +39,12 @@ class Product extends CI_Controller{
 		$x['tag']	   = $this->tag_model->get_all_tag();
 		$x['category'] = $this->category_model->get_all_category();
 		$x['data'] = $this->product_model->get_product_by_id($product_id);
-		$this->load->view('backend/v_edit_product',$x);
+		$x['title'] = 'Edit Product';
+		$x['menu'] = 'product';
+		$x['submenu'] = 'product_add';
+		$this->load->view('backend/v_header', $x);
+		$this->load->view('backend/v_edit_product', $x);
+		$this->load->view('backend/v_footer');
 	}
 
 	function publish(){
@@ -63,9 +78,7 @@ class Product extends CI_Controller{
 				$category = $this->input->post('category',TRUE);
 
 				$preslug  = strip_tags(htmlspecialchars($this->input->post('slug',TRUE),ENT_QUOTES));
-				$string   = preg_replace('/[^a-zA-Z0-9 \&%|{.}=,?!*()"-_+$@;<>\']/', '', $preslug);
-				$trim     = trim($string);
-				$praslug  = strtolower(str_replace(" ", "-", $trim));
+				$praslug  = url_title($preslug, '-', TRUE);
 				$query = $this->db->get_where('tbl_product', array('product_slug' => $praslug));
 				if($query->num_rows() > 0){
 					$uniqe_string = rand();
@@ -80,8 +93,15 @@ class Product extends CI_Controller{
 				}
 
 				$description=htmlspecialchars($this->input->post('description',TRUE),ENT_QUOTES);
+				if(empty($description)){
+					$plain = strip_tags($contents);
+					$description = trim(substr($plain, 0, 160));
+					if(strlen($plain) > 160) $description .= '...';
+				}
 
-				$this->product_model->save_product($title,$price,$contents,$category,$slug,$image,$tags,$description);
+				$keyword_focus=htmlspecialchars($this->input->post('keyword_focus',TRUE),ENT_QUOTES);
+
+				$this->product_model->save_product($title,$price,$contents,$category,$slug,$image,$tags,$description,$keyword_focus);
 				echo $this->session->set_flashdata('msg','success');
 				redirect('backend/product');
 			}else{
@@ -126,9 +146,7 @@ class Product extends CI_Controller{
 				$category = $this->input->post('category',TRUE);
 
 				$preslug  = strip_tags(htmlspecialchars($this->input->post('slug',TRUE),ENT_QUOTES));
-				$string   = preg_replace('/[^a-zA-Z0-9 \&%|{.}=,?!*()"-_+$@;<>\']/', '', $preslug);
-				$trim     = trim($string);
-				$praslug  = strtolower(str_replace(" ", "-", $trim));
+				$praslug  = url_title($preslug, '-', TRUE);
 
 				$query = $this->db->get_where('tbl_product', array('product_slug' => $praslug));
 				if($query->num_rows() > 1){
@@ -144,8 +162,15 @@ class Product extends CI_Controller{
 				}
 
 				$description=htmlspecialchars($this->input->post('description',TRUE),ENT_QUOTES);
+				if(empty($description)){
+					$plain = strip_tags($contents);
+					$description = trim(substr($plain, 0, 160));
+					if(strlen($plain) > 160) $description .= '...';
+				}
 
-				$this->product_model->edit_product_with_img($id,$title,$price,$contents,$category,$slug,$image,$tags,$description);
+				$keyword_focus=htmlspecialchars($this->input->post('keyword_focus',TRUE),ENT_QUOTES);
+
+				$this->product_model->edit_product_with_img($id,$title,$price,$contents,$category,$slug,$image,$tags,$description,$keyword_focus);
 				echo $this->session->set_flashdata('msg','info');
 				redirect('backend/product');
 			}else{
@@ -161,9 +186,7 @@ class Product extends CI_Controller{
 			$category = $this->input->post('category',TRUE);
 
 			$preslug  = strip_tags(htmlspecialchars($this->input->post('slug',TRUE),ENT_QUOTES));
-			$string   = preg_replace('/[^a-zA-Z0-9 \&%|{.}=,?!*()"-_+$@;<>\']/', '', $preslug);
-			$trim     = trim($string);
-			$praslug  = strtolower(str_replace(" ", "-", $trim));
+			$praslug  = url_title($preslug, '-', TRUE);
 
 			$query = $this->db->get_where('tbl_product', array('product_slug' => $praslug));
 			if($query->num_rows() > 1){
@@ -179,8 +202,15 @@ class Product extends CI_Controller{
 			}
 
 			$description=htmlspecialchars($this->input->post('description',TRUE),ENT_QUOTES);
+			if(empty($description)){
+				$plain = strip_tags($contents);
+				$description = trim(substr($plain, 0, 160));
+				if(strlen($plain) > 160) $description .= '...';
+			}
 
-			$this->product_model->edit_product_no_img($id,$title,$price,$contents,$category,$slug,$tags,$description);
+			$keyword_focus=htmlspecialchars($this->input->post('keyword_focus',TRUE),ENT_QUOTES);
+
+			$this->product_model->edit_product_no_img($id,$title,$price,$contents,$category,$slug,$tags,$description,$keyword_focus);
 			echo $this->session->set_flashdata('msg','info');
 			redirect('backend/product');
 		}

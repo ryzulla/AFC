@@ -19,10 +19,10 @@ class Home extends CI_Controller {
 		$data['site_desc'] = $site['site_description'];
 		$data['site_twitter'] = $site['site_twitter'];
 		$data['site_image'] = $site['site_logo_big'];
+		$data['site_address'] = $site['site_address'];
 		$data['post_slider'] = $this->home_model->get_post_slider();
 		$data['legality_slider'] = $this->home_model->get_slider_legality();
 		$data['pengiriman'] = $this->home_model->get_pengiriman();
-		$data['caption_1'] = $home->home_caption_1;
 		$data['latest_post'] = $this->home_model->get_latest_post();
 		// $data['popular_post'] = $this->home_model->get_popular_post();
 		$home = $this->db->get('tbl_home',1)->row();

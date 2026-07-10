@@ -5,7 +5,7 @@
 						<!-- Logo -->
 						<div class="header-logo-wrap">
 							<a href="<?php echo site_url();?>" class="logo">
-								<img src="<?php echo base_url().'theme/images/'.$logo;?>" width="145" height="40" alt="" />
+								<img src="<?php echo base_url().'theme/images/'.$logo;?>" width="145" height="40" alt="AFC Store Indonesia" />
 							</a>
 						</div>
 						<!-- Mobile nav bars -->

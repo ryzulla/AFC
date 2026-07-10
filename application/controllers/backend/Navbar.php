@@ -14,7 +14,12 @@ class Navbar extends CI_Controller{
 
 	function index(){
 		$x['data'] = $this->navbar_model->get_navbar();
-		$this->load->view('backend/v_navbar',$x);
+		$x['title'] = 'Navbar Settings';
+		$x['menu'] = 'settings';
+		$x['submenu'] = 'navbar';
+		$this->load->view('backend/v_header', $x);
+		$this->load->view('backend/v_navbar', $x);
+		$this->load->view('backend/v_footer');
 	}
 
 	function insert(){

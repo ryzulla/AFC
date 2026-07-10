@@ -7,18 +7,27 @@ class Contact extends CI_Controller {
 		$this->load->model('Contact_model','contact_model');
 		$this->load->model('Visitor_model','visitor_model');
         $this->visitor_model->count_visitor();
+        $this->load->library('ip_blocker_lib', NULL, 'ip_blocker');
 	}
 	function index(){
 		//$this->output->enable_profiler(TRUE);
 		$site_info = $this->db->get('tbl_site', 1)->row();
 		$v['logo'] =  $site_info->site_logo_header;
 		$data['icon'] = $site_info->site_favicon;
+		$data['site_image'] = $site_info->site_logo_big;
+		$data['site_name'] = $site_info->site_name;
+		$data['site_twitter'] = $site_info->site_twitter;
 		$data['header'] = $this->load->view('header',$v,TRUE);
 		$data['footer'] = $this->load->view('footer','',TRUE);
 		$this->load->view('contact_view',$data);
 	}
 
 	function send(){
+		if (!$this->ip_blocker->check_and_register(2, 10)) {
+			$this->session->set_flashdata('msg','<div class="alert alert-danger">Terlalu banyak permintaan. Silakan coba lagi nanti.</div>');
+			redirect('contact');
+			return;
+		}
 		$this->load->library('form_validation');
 
 		$this->form_validation->set_rules('name', 'Name', 'required|min_length[3]|max_length[40]|htmlspecialchars');

@@ -10,7 +10,6 @@ class Inbox extends CI_Controller{
             redirect($url);
         };
 		$this->load->model('backend/Inbox_model','inbox_model');
-		error_reporting(0);
 		$this->load->helper('text');
 	}
 
@@ -51,7 +50,11 @@ class Inbox extends CI_Controller{
         $this->pagination->initialize($config);
         $data['page'] = $this->pagination->create_links();
 		$data['data'] = $this->inbox_model->get_all_inbox($offset,$limit);
-		$this->load->view('backend/v_inbox',$data);
+		$data['title'] = 'Inbox';
+		$data['menu'] = 'inbox';
+		$this->load->view('backend/v_header', $data);
+		$this->load->view('backend/v_inbox', $data);
+		$this->load->view('backend/v_footer');
 	}
 
 	function read(){
@@ -65,7 +68,11 @@ class Inbox extends CI_Controller{
 			$x['message'] = $row['inbox_message'];
 			$x['date'] = $row['inbox_created_at'];
 			$this->inbox_model->update_status_by_id($inbox_id);
-			$this->load->view('backend/v_inbox_detail',$x);
+			$x['title'] = 'View Message';
+			$x['menu'] = 'inbox';
+			$this->load->view('backend/v_header', $x);
+			$this->load->view('backend/v_inbox_detail', $x);
+			$this->load->view('backend/v_footer');
 		}else{
 			redirect('backend/inbox');
 		}
@@ -76,7 +83,11 @@ class Inbox extends CI_Controller{
 		$data = $this->inbox_model->search_inbox($keyword);
 		if($data->num_rows() > 0){
 			$x['data'] = $data;
-			$this->load->view('backend/v_inbox',$x);
+			$x['title'] = 'Search Result';
+			$x['menu'] = 'inbox';
+			$this->load->view('backend/v_header', $x);
+			$this->load->view('backend/v_inbox', $x);
+			$this->load->view('backend/v_footer');
 		}else{
 			$this->session->set_flashdata('msg','info');
 			redirect('backend/inbox');
@@ -87,6 +98,15 @@ class Inbox extends CI_Controller{
 		$inbox_id = $this->input->post('id',TRUE);
 		$this->inbox_model->delete_inbox($inbox_id);
 		$this->session->set_flashdata('msg','success');
+		redirect('backend/inbox');
+	}
+
+	function delete_all(){
+		$inbox_ids = $this->input->post('ids', TRUE);
+		if($inbox_ids){
+			$this->inbox_model->delete_all_inbox($inbox_ids);
+			$this->session->set_flashdata('msg','success');
+		}
 		redirect('backend/inbox');
 	}
 }

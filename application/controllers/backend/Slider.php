@@ -13,19 +13,34 @@ class Slider extends CI_Controller{
 
 	function index(){
 		$x['data'] = $this->slider_model->get_all_slider();
-		$this->load->view('backend/v_slider',$x);
+		$x['title'] = 'Slider';
+		$x['menu'] = 'settings';
+		$x['submenu'] = 'slider';
+		$this->load->view('backend/v_header', $x);
+		$this->load->view('backend/v_slider', $x);
+		$this->load->view('backend/v_footer');
 	}
 
 	function add_new(){
 		// $x['tag']	   = $this->tag_model->get_all_tag();
 		// $x['category'] = $this->category_model->get_all_category();
-		$this->load->view('backend/v_add_slider',$x);
+		$x['title'] = 'Slider';
+		$x['menu'] = 'settings';
+		$x['submenu'] = 'slider';
+		$this->load->view('backend/v_header', $x);
+		$this->load->view('backend/v_add_slider', $x);
+		$this->load->view('backend/v_footer');
 	}
 
 	function get_edit(){
 		$slider_id = $this->uri->segment(4);
 		$x['data'] = $this->slider_model->get_slider_by_id($slider_id);
-		$this->load->view('backend/v_edit_slider',$x);
+		$x['title'] = 'Slider';
+		$x['menu'] = 'settings';
+		$x['submenu'] = 'slider';
+		$this->load->view('backend/v_header', $x);
+		$this->load->view('backend/v_edit_slider', $x);
+		$this->load->view('backend/v_footer');
 	}
 
 	function publish(){

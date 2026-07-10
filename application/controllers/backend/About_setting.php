@@ -18,7 +18,12 @@ class About_setting extends CI_Controller{
 		$x['about_id'] = $data->about_id;
 		$x['about_img'] = $data->about_image;
 		$x['about_desc'] = $data->about_description;
-		$this->load->view('backend/v_about_setting',$x);
+		$x['title'] = 'About Setting';
+		$x['menu'] = 'settings';
+		$x['submenu'] = 'about_setting';
+		$this->load->view('backend/v_header', $x);
+		$this->load->view('backend/v_about_setting', $x);
+		$this->load->view('backend/v_footer');
 	}
 
 	function update(){

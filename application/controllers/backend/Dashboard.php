@@ -2,7 +2,6 @@
 class Dashboard extends CI_Controller{
 	function __construct(){
 		parent::__construct();
-		error_reporting(0);
 		if($this->session->userdata('logged') !=TRUE){
             $url=base_url('administrator');
             redirect($url);
@@ -12,10 +11,14 @@ class Dashboard extends CI_Controller{
 	}
 	
 	function index(){
-		$visitor = $this->visitor_model->visitor_statistics();
-		foreach($visitor as $result){
-            $bulan[] = $result->tgl; 
-            $value[] = (float) $result->jumlah;
+        $visitor = $this->visitor_model->visitor_statistics();
+        $bulan = array();
+        $value = array();
+        if($visitor){
+            foreach($visitor as $result){
+                $bulan[] = $result->tgl; 
+                $value[] = (float) $result->jumlah;
+            }
         }
         $data['month'] = json_encode($bulan);
         $data['value'] = json_encode($value);
@@ -25,6 +28,7 @@ class Dashboard extends CI_Controller{
 		$data['all_comments'] = $this->visitor_model->count_all_comments();
 		$data['top_five_articles'] = $this->visitor_model->top_five_articles();
 		
+		$visitor_this_month = 0;
 		$monthly_visitors = $this->visitor_model->count_visitor_this_month();
 		if($monthly_visitors->num_rows() > 0){
 			$row = $monthly_visitors->row_array();
@@ -87,7 +91,11 @@ class Dashboard extends CI_Controller{
 			$data['other_visitor'] = 0;
 		}
 		
-		$this->load->view('backend/v_dashboard',$data);
+		$data['title'] = 'Dashboard';
+		$data['menu'] = 'dashboard';
+		$this->load->view('backend/v_header', $data);
+		$this->load->view('backend/v_dashboard', $data);
+		$this->load->view('backend/v_footer');
 	}
 
 }

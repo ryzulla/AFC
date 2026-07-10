@@ -12,7 +12,11 @@ class Counter extends CI_Controller{
 
 	function index(){
 		$x['data'] = $this->counter_model->get_all_counter();
-		$this->load->view('backend/v_counter',$x);
+		$x['title'] = 'Counter';
+		$x['menu'] = 'counter';
+		$this->load->view('backend/v_header', $x);
+		$this->load->view('backend/v_counter', $x);
+		$this->load->view('backend/v_footer');
 	}
 
 	function save(){

@@ -1,365 +1,199 @@
-<!DOCTYPE html>
-<html lang="en">
-	<head>
+<?php
+// Structured Data (Schema.org)
+$ld = array(
+	'@context'    => 'https://schema.org',
+	'@type'       => 'Product',
+	'name'        => $title,
+	'description' => $description,
+	'image'       => base_url().'assets/images/'.$image,
+	'sku'         => (string)$product_id,
+	'brand'       => array('@type' => 'Brand', 'name' => 'AFC'),
+	'offers'      => array(
+		'@type'         => 'Offer',
+		'priceCurrency' => 'IDR',
+		'price'         => preg_replace('/[^0-9]/', '', $price),
+		'availability'  => 'https://schema.org/InStock',
+		'url'           => site_url('product/'.$slug),
+	),
+);
+$breadcrumb = array(
+	'@context'        => 'https://schema.org',
+	'@type'           => 'BreadcrumbList',
+	'itemListElement' => array(
+		array('@type' => 'ListItem', 'position' => 1, 'name' => 'Beranda', 'item' => site_url()),
+		array('@type' => 'ListItem', 'position' => 2, 'name' => 'Produk',  'item' => site_url('product')),
+		array('@type' => 'ListItem', 'position' => 3, 'name' => $title,     'item' => site_url('product/'.$slug)),
+	),
+);
+$jsonld = '<script type="application/ld+json">'.json_encode($ld, JSON_UNESCAPED_SLASHES|JSON_UNESCAPED_UNICODE).'</script>'
+        . '<script type="application/ld+json">'.json_encode($breadcrumb, JSON_UNESCAPED_SLASHES|JSON_UNESCAPED_UNICODE).'</script>';
 
-		<!-- Page Title -->
-		<title><?php echo $title;?></title>
-		
-		<!-- Page header -->
-		<meta charset="utf-8"/>	
-		<meta name="description" content=""/>
-		<meta name="keywords" content=""/>
-		<meta name="author" content=""/>
-		<!--[if IE]><meta http-equiv='X-UA-Compatible' content='IE=edge,chromte=1'><![endif]-->
-		<meta name="viewport" content="width=device-width"/>
-		<!-- CSS -->
-		<link rel="stylesheet" href="<?php echo base_url('theme/css/bootstrap.min.css')?>"/>
-		<!-- <link rel="stylesheet" href="<?php echo base_url('theme/css/WA.css')?>"/> -->
-		<link rel="stylesheet" href="<?php echo base_url('theme/css/style.css')?>"/>
-		<link rel="stylesheet" href="<?php echo base_url('theme/css/padding-margin.css')?>"/>
-		<link href='<?php echo base_url() . 'theme/css/lib/arcontactus.css' ?>' rel='stylesheet'/>
-		<!-- Favicons -->		
-		<link rel="shortcut icon" href="<?php echo base_url('theme/images/'.$icon);?>">
-		<link href="<?php echo base_url().'theme/css/jssocials.css'?>" rel="stylesheet">
-		<link href="<?php echo base_url().'theme/css/jssocials-theme-flat.css'?>" rel="stylesheet">
-		<link rel="stylesheet" href="<?php echo base_url().'theme/css/font-awesome.min.css'?>"/>
-		<!-- SEO Tags -->
-		<meta name="description" content="<?php echo $description;?>"/>
-		<link rel="canonical" href="<?php echo site_url('product/'.$slug);?>" />
-		<meta property="og:locale" content="id_ID" />
-		<meta property="og:type" content="article" />
-		<meta property="og:title" content="<?php echo $title;?>" />
-		<meta property="og:description" content="<?php echo $description;?>" />
-		<meta property="og:url" content="<?php echo site_url('product/'.$slug);?>" />
-		<meta property="og:site_name" content="<?php echo $site_name;?>" />
-		<meta property="article:publisher" content="<?php echo $site_facebook;?>" />
-		<meta property="article:section" content="<?php echo $category;?>" />
-		<meta property="og:image" content="<?php echo base_url().'assets/images/'.$image;?>" />
-		<meta property="og:image:secure_url" content="<?php echo base_url().'assets/images/'.$image;?>" />
-		<meta name="twitter:card" content="summary_large_image" />
-		<meta name="twitter:description" content="<?php echo $description;?>" />
-		<meta name="twitter:title" content="<?php echo $title;?>" />
-		<meta name="twitter:site" content="<?php echo $site_twitter;?>" />
-		<meta name="twitter:image" content="<?php echo base_url().'assets/images/'.$image;?>" />
-		<!-- / End SEO Tags. -->
-		<!-- Google tag (gtag.js) -->
-<script async src="https://www.googletagmanager.com/gtag/js?id=G-QQRJXKRN9M"></script>
-<script>
-  window.dataLayer = window.dataLayer || [];
-  function gtag(){dataLayer.push(arguments);}
-  gtag('js', new Date());
+$headextra = '<meta property="product:price:amount" content="'.preg_replace('/[^0-9]/', '', $price).'" />'
+           . '<meta property="product:price:currency" content="IDR" />';
 
-  gtag('config', 'G-QQRJXKRN9M');
-  gtag('config', 'AW-16562056140');
-</script>
-<script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-9402613678162601" crossorigin="anonymous"></script>
-	</head>
-	<body class="content-animate">
+$footinline = '<script>
+$(document).ready(function(){
+	$(".SocialShareArticle").jsSocials({
+		showCount: false,
+		showLabel: false,
+		shareIn: "popup",
+		shares: [ "facebook", "whatsapp", "twitter", "linkedin" ]
+	});
+});
+</script>';
 
-		<!-- PRELOADER
-		==================================================-->	
-		<div class="page-loader">
-			<div class="loader-area"></div>
-			<div class="loader font-face1">loading...	
-			</div>
-		</div>   
+// Link pesan WhatsApp dengan nama produk terisi otomatis
+$wa_text = 'Halo, saya tertarik memesan produk *'.$title.'* (Rp '.$price.') di AFC Store. Apakah masih tersedia?';
+$wa_link = 'https://api.whatsapp.com/send/?phone=628111797970&text='.rawurlencode($wa_text).'&type=phone_number&app_absent=0';
 
-		
-		<div id='arcontactus'></div>
-		
-		<!-- PAGE
-		==================================================-->	
-		<div id="top" class="page">
-			
-			<!-- Navigation panel
-			================================================== -->		
-			<?php echo $header;?>
-				<!-- End Navigation panel -->
-		
-			<!-- Main Content
-			==================================================-->		
-			<main class="cd-main-content mt-100">
+$this->load->view('partials/head', array(
+	'p_title'     => $title.' | '.$site_name,
+	'p_desc'      => $description,
+	'p_keywords'  => $keyword_focus,
+	'p_canonical' => site_url('product/'.$slug),
+	'p_ogtype'    => 'product',
+	'p_ogimage'   => base_url('assets/images/'.$image),
+	'p_jsonld'    => $jsonld,
+	'p_headextra' => $headextra,
+	'p_extracss'  => array('product.css', 'jssocials.css', 'jssocials-theme-flat.css'),
+));
+?>
+			<section class="page-section small-section">
+				<div class="container relative afc-shop afc-product-detail">
 
-				
-				
-				<!-- SECTION ABOUT
-				================================================== 	-->	
-				<section class="page-section small-section">				
-					<div class="container relative">
-					
-						<div class="row">
-							<div class="col-md-8 col-md-offset-2">
-								<!-- SECTION BLOG ITEM
-								================================================== -->
-								<div class="blog-item clearfix">						
-									
-									<!--POST TITLE-->
-									<center>
-										<h3 class="mt-0 font-face1 fw700"><?php echo $title;?></h1>
-										<div class="blog-item-meta font-face1">
-											<span><a href="javascript:void(0)"><i class="fa fa-calendar-o"></i> <?php echo date('d M Y',strtotime($date));?></a></span>
-											<span class="separator">&vert;</span>
-											<span><a href="javascript:void(0)"><i class="fa fa-user"></i> <?php echo $author;?></a></span>
-											<!-- <span class="separator">&vert;</span> -->
-											<!-- <span><a href="<?php echo site_url('category/'.$category_slug);?>"><i class="fa fa-folder-open"></i> <?php echo $category;?></a></span> -->
-											<span class="separator">&vert;</span>
-											<span><a href="javascript:void(0)"><i class="fa fa-eye"></i> <?php echo number_format($views).' views';?></a></span>
-											<span class="separator">&vert;</span>
-											<span><a href="javascript:void(0)"><i class="fa fa-comments"></i> <?php echo number_format($comment);?> Disscussion</a></span>
-										</div>
-										<div class="row">
-                                        <div class="col-md-12">
-                                            <div class="blog-media">
-                                                <img alt="" src="<?php echo base_url().'assets/images/'.$image;?>" width="80%">
-												<h4 class="center">Rp.  <?=$price;?></h4>
-                                            </div>
-                                            
-                                        </div>
-                                        
-									</center>
-									<div class="col-md-12">
-                                            <div class="blog-item-body light-text clearfix">
-                                                <?php echo $content;?>
-                                            </div>
-									</div>
-								</div>
-									
-									
-									<!--POST META-->
-									
-									
-									
-									<!--POST MEDIA-->
-									
-									
-									<!--POST TAG-->
-									
-									
-								
-									<!--POST COMMENT-->
-									<div class="comments-heading text-center mb-30 mt-60">
-										<hgroup>
-											<h2 class="font-face1 section-heading"><?php echo $comment;?> Diskusi</h2>
-				
-										</hgroup>									
-									</div>
-									
-									<!-- Comment First level -->
-									<ul class="comments-list mb-100 mb-md-80 mb-sm-60 clearfix">
-									<?php foreach ($show_comments->result() as $row):?>
-										<li class="comment">
-											<div class="comment-body clearfix">
-												<div class="lp1 font-face1">
-													<span class="user-avatar float-left hidden-xs">
-														<img alt="" src="<?php echo base_url().'assets/images/'.$row->comment_image;?>">  
-													</span>
-													<div class="comment-user">
-														<a href="javascript:void(0)"><?php echo $row->comment_name;?></a>
-													</div>
-													<div class="comment-date">
-														<span><?php echo date('d M Y H:i:s',strtotime($row->comment_date));?></span>
-													</div>									
-												</div>										
-												<div class="comment-inner light-text">      
-													<p><?php echo $row->comment_message;?></p>
-												</div>  
-											</div>    
-											<!-- Comment children second level -->
-											<?php
-												$comment_id=$row->comment_id;
-												$query = $this->db->query("SELECT * FROM tbl_comment_product WHERE comment_status='1' AND comment_parent='$comment_id'");
-												foreach ($query->result() as $i) :
-											?>
-											<ul class="children">
-												<li class="comment">
-													<div class="comment-body clearfix">
-														<div class="lp1 font-face1">
-															<span class="user-avatar float-left hidden-xs">
-																<img alt="" src="<?php echo base_url().'assets/images/'.$i->comment_image;?>">  
-															</span>
-															<div class="comment-user">
-																<a href="javascript:void(0)"><?php echo $i->comment_name;?></a>
-															</div>
-															<div class="comment-date">
-																<span><?php echo date('d M Y H:i:s',strtotime($i->comment_date));?></span>
-															</div>									
-														</div>										
-														<div class="comment-inner light-text">      
-															<p><?php echo $i->comment_message;?></p>
-														</div>  
-													</div>    
-												</li>
-											</ul>
-											<!-- Comment children second level -->
-											<?php endforeach;?>
-											
-										</li>
-									<?php endforeach;?>
+					<nav class="afc-breadcrumb" aria-label="breadcrumb">
+						<a href="<?php echo site_url();?>">Beranda</a>
+						<span class="sep">/</span>
+						<a href="<?php echo site_url('product');?>">Produk</a>
+						<span class="sep">/</span>
+						<span class="current"><?php echo $title;?></span>
+					</nav>
 
-									</ul>
-									<!-- End Comment First level -->
-									
-									<!--POST LEAVE COMMENT-->
-									<div class="comments-heading text-center mb-30">
-										<hgroup>
-											<h2 class="font-face1 section-heading">Leave a disscuss</h2>
-										</hgroup>									
-									</div>
-									<?php echo $this->session->flashdata('msg');?>
-									<form method="post" action="<?php echo site_url('send_comment_product');?>" role="form" class="form">
-										<div class="row">
-											<input type="hidden" name="product_id" value="<?php echo $product_id;?>" required>
-                        					<input type="hidden" name="slug" value="<?php echo $slug;?>" required>
-											<div class="col-md-6">
-												<div class="form-group">
-													 <input type="text" name="name" class="full_width" placeholder="Name *" maxlength="100" required="">										
-												</div>
-											</div>
-											<div class="col-md-6">
-												<div class="form-group">
-													<input type="email" name="email" class="full_width" placeholder="Email *" maxlength="100" required="">									
-												</div>
-											</div>
-											<div class="col-md-12">
-												<div class="form-group">
-													<textarea name="comment" class="full_width" rows="6" placeholder="Comment *" maxlength="400" required></textarea>										
-												</div>
-											</div>
-											<div class="col-md-12 center-xs">
-												<button type="submit" class="btn bg-black white-color">
-													Submit comment
-												</button>
-											</div>	
-										</div>		
-									</form>
-									<!--END POST LEAVE COMMENT-->
-									
-								</div>
-							
-							</div>
+					<div class="afc-detail-grid">
+						<!-- Media -->
+						<div class="afc-detail-media">
+							<img loading="lazy" src="<?php echo base_url().'assets/images/'.$image;?>" alt="<?php echo htmlspecialchars($title, ENT_QUOTES);?>">
 						</div>
-					</div>					
-				</section>								
-				
-				
-				
-				<hr class="nomargin nopadding"/>
-				
-				<!-- FOOTER
-				================================================== -->	
-				<?php echo $footer;?>
-				
-				</main>		
-	
-		</div>
 
-		<!-- Modal Search-->
-		<div class="modal fade" id="ModalSearch" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" style="z-index: 10000;">
-		  <div class="modal-dialog" role="document">
-		    <div class="modal-content">
-		      <div class="modal-body">	
-		      	<form action="<?php echo site_url('search');?>" method="GET">
-		        	<div class="input-group">
-		              <input type="text" name="search_query" class="form-control input-search" style="height: 40px;" placeholder="Search..." required>
-				      <span class="input-group-btn">
-				        <button class="btn btn-default" type="submit" style="height: 40px;background-color: #ccc;"><span class="fa fa-search"></span></button>
-				      </span>
-				    </div>
-				</form>
-		      </div>
-		    </div>
-		  </div>
-		</div>
-
-	<!-- POPOP -->
-		<!-- <div id='whatsapp-chat' class='hide'>
-			<div class='header-chat'>
-				<div class='head-home'>
-					<div class='info-avatar'><img src='https://d1fdloi71mui9q.cloudfront.net/8UUA4DxQSICLeZvK9byt_7220mOBHjnwzM2PJ' /></div>
-					<p><span class="whatsapp-name">AFC</span><br><small>Typically replies within an minutes</small></p>
-
-				</div>
-				<div class='get-new hide'>
-					<div id='get-label'></div>
-					<div id='get-nama'></div>
-				</div>
-			</div>
-			<div class='home-chat'>
-
-			</div>
-			<div class='start-chat'>
-				<div pattern="https://elfsight.com/assets/chats/patterns/whatsapp.png" class="WhatsappChat__Component-sc-1wqac52-0 whatsapp-chat-body">
-					<div class="WhatsappChat__MessageContainer-sc-1wqac52-1 dAbFpq">
-						<div style="opacity: 0;" class="WhatsappDots__Component-pks5bf-0 eJJEeC">
-							<div class="WhatsappDots__ComponentInner-pks5bf-1 hFENyl">
-								<div class="WhatsappDots__Dot-pks5bf-2 WhatsappDots__DotOne-pks5bf-3 ixsrax"></div>
-								<div class="WhatsappDots__Dot-pks5bf-2 WhatsappDots__DotTwo-pks5bf-4 dRvxoz"></div>
-								<div class="WhatsappDots__Dot-pks5bf-2 WhatsappDots__DotThree-pks5bf-5 kXBtNt"></div>
+						<!-- Info -->
+						<div class="afc-detail-info">
+							<?php if(!empty($category)):?><span class="afc-badge"><?php echo $category;?></span><?php endif;?>
+							<h1 class="afc-detail-title"><?php echo $title;?></h1>
+							<div class="afc-detail-meta">
+								<span><i class="fa fa-eye"></i><?php echo number_format($views);?> dilihat</span>
+								<span><i class="fa fa-comments"></i><?php echo number_format($comment);?> diskusi</span>
+								<span><i class="fa fa-calendar-o"></i><?php echo date('d M Y',strtotime($date));?></span>
 							</div>
-						</div>
-						<div style="opacity: 1;" class="WhatsappChat__Message-sc-1wqac52-4 kAZgZq">
-							<div class="WhatsappChat__Author-sc-1wqac52-3 bMIBDo">AFC</div>
-							<div class="WhatsappChat__Text-sc-1wqac52-2 iSpIQi">Hallo, Terima kasih telah mengunjungi website kami.<br> Ada yang bisa kami bantu?</div>
-							<div class="WhatsappChat__Time-sc-1wqac52-5 cqCDVm"><?=date('d F Y')?></div>
+							<div class="afc-detail-price">Rp <?php echo $price;?><small>Harga sudah termasuk konsultasi gratis</small></div>
+
+							<div class="afc-cta">
+								<a class="afc-btn afc-btn-wa afc-btn-block" href="<?php echo $wa_link;?>" target="_blank" rel="nofollow">
+									<i class="fa fa-whatsapp"></i> Pesan via WhatsApp
+								</a>
+							</div>
+
+							<ul class="afc-trust">
+								<li><i class="fa fa-check-circle"></i> Produk 100% asli &amp; resmi AFC</li>
+								<li><i class="fa fa-truck"></i> Pengiriman ke seluruh Indonesia</li>
+								<li><i class="fa fa-comments-o"></i> Gratis konsultasi kesehatan</li>
+							</ul>
+
+							<div class="afc-share">
+								<span>Bagikan:</span>
+								<div class="SocialShareArticle"></div>
+							</div>
 						</div>
 					</div>
-				</div>
 
-				<div class='blanter-msg'>
-					<textarea id='chat-input' placeholder='Write a response' maxlength='120' row='1'></textarea>
-					<a href='javascript:void;' id='send-it'><svg viewBox="0 0 448 448">
-							<path d="M.213 32L0 181.333 320 224 0 266.667.213 416 448 224z" />
-						</svg></a>
+					<!-- Deskripsi -->
+					<div class="afc-detail-desc">
+						<h2 class="afc-section-title">Deskripsi Produk</h2>
+						<div class="afc-desc-body"><?php echo $content;?></div>
+					</div>
+
+					<!-- Produk terkait -->
+					<?php if(isset($related_product) && $related_product->num_rows() > 0):?>
+					<div class="afc-related">
+						<h2 class="afc-section-title">Produk Terkait</h2>
+						<div class="afc-grid afc-grid-related">
+							<?php foreach ($related_product->result() as $rel):?>
+							<article class="afc-card">
+								<a class="afc-card-media" href="<?php echo site_url('product/'.$rel->product_slug);?>" title="<?php echo htmlspecialchars($rel->product_title, ENT_QUOTES);?>">
+									<img loading="lazy" src="<?php echo base_url().'assets/images/thumb/'.$rel->product_image;?>" alt="<?php echo htmlspecialchars($rel->product_title, ENT_QUOTES);?>">
+								</a>
+								<div class="afc-card-body">
+									<h2 class="afc-card-title"><a href="<?php echo site_url('product/'.$rel->product_slug);?>"><?php echo $rel->product_title;?></a></h2>
+									<div class="afc-card-price">Rp <?php echo $rel->product_price;?></div>
+									<div class="afc-card-foot">
+										<span class="afc-views"><i class="fa fa-eye"></i><?php echo $rel->product_views;?></span>
+										<a class="afc-btn afc-btn-outline afc-btn-sm" href="<?php echo site_url('product/'.$rel->product_slug);?>">Detail</a>
+									</div>
+								</div>
+							</article>
+							<?php endforeach;?>
+						</div>
+					</div>
+					<?php endif;?>
+
+					<!-- Diskusi -->
+					<div class="afc-discuss">
+						<h2 class="afc-section-title"><?php echo number_format($comment);?> Diskusi</h2>
+
+						<ul class="afc-comments">
+						<?php foreach ($show_comments->result() as $row):?>
+							<li class="comment">
+								<div class="c-head">
+									<img class="c-avatar" loading="lazy" src="<?php echo base_url().'assets/images/'.$row->comment_image;?>" alt="<?php echo htmlspecialchars($row->comment_name, ENT_QUOTES);?>">
+									<div>
+										<div class="c-name"><?php echo $row->comment_name;?></div>
+										<div class="c-date"><?php echo date('d M Y H:i',strtotime($row->comment_date));?></div>
+									</div>
+								</div>
+								<p class="c-body"><?php echo $row->comment_message;?></p>
+								<?php
+									$comment_id=$row->comment_id;
+									$query = $this->db->query("SELECT * FROM tbl_comment_product WHERE comment_status='1' AND comment_parent='$comment_id'");
+									if($query->num_rows() > 0):
+								?>
+								<ul class="children">
+									<?php foreach ($query->result() as $i):?>
+									<li class="comment">
+										<div class="c-head">
+											<img class="c-avatar" loading="lazy" src="<?php echo base_url().'assets/images/'.$i->comment_image;?>" alt="<?php echo htmlspecialchars($i->comment_name, ENT_QUOTES);?>">
+											<div>
+												<div class="c-name"><?php echo $i->comment_name;?></div>
+												<div class="c-date"><?php echo date('d M Y H:i',strtotime($i->comment_date));?></div>
+											</div>
+										</div>
+										<p class="c-body"><?php echo $i->comment_message;?></p>
+									</li>
+									<?php endforeach;?>
+								</ul>
+								<?php endif;?>
+							</li>
+						<?php endforeach;?>
+						<?php if($show_comments->num_rows() == 0):?>
+							<li class="afc-empty">Belum ada diskusi. Jadilah yang pertama bertanya!</li>
+						<?php endif;?>
+						</ul>
+
+						<h3 class="afc-section-title" style="font-size:18px;">Tinggalkan Pertanyaan</h3>
+						<?php echo $this->session->flashdata('msg');?>
+						<form class="afc-form" method="post" action="<?php echo site_url('send_comment_product');?>" role="form">
+							<input type="hidden" name="product_id" value="<?php echo $product_id;?>" required>
+							<input type="hidden" name="slug" value="<?php echo $slug;?>" required>
+							<div class="row-2">
+								<input type="text" name="name" placeholder="Nama *" maxlength="100" required>
+								<input type="email" name="email" placeholder="Email *" maxlength="100" required>
+							</div>
+							<textarea name="comment" placeholder="Tulis pertanyaan atau komentar Anda *" maxlength="400" required></textarea>
+							<button type="submit" class="afc-btn afc-btn-primary">Kirim</button>
+						</form>
+					</div>
+
 				</div>
-			</div>
-			<div id='get-number'></div><a class='close-chat' href='javascript:void'>×</a>
-		</div>
-		<a class='blantershow-chat' href='javascript:void' title='Show Chat'><svg width="20" viewBox="0 0 24 24">
-				<defs />
-				<path fill="#eceff1" d="M20.5 3.4A12.1 12.1 0 0012 0 12 12 0 001.7 17.8L0 24l6.3-1.7c2.8 1.5 5 1.4 5.8 1.5a12 12 0 008.4-20.3z" />
-				<path fill="#4caf50" d="M12 21.8c-3.1 0-5.2-1.6-5.4-1.6l-3.7 1 1-3.7-.3-.4A9.9 9.9 0 012.1 12a10 10 0 0117-7 9.9 9.9 0 01-7 16.9z" />
-				<path fill="#fafafa" d="M17.5 14.3c-.3 0-1.8-.8-2-.9-.7-.2-.5 0-1.7 1.3-.1.2-.3.2-.6.1s-1.3-.5-2.4-1.5a9 9 0 01-1.7-2c-.3-.6.4-.6 1-1.7l-.1-.5-1-2.2c-.2-.6-.4-.5-.6-.5-.6 0-1 0-1.4.3-1.6 1.8-1.2 3.6.2 5.6 2.7 3.5 4.2 4.2 6.8 5 .7.3 1.4.3 1.9.2.6 0 1.7-.7 2-1.4.3-.7.3-1.3.2-1.4-.1-.2-.3-.3-.6-.4z" />
-			</svg> Konsultasi Sekarang</a> -->
-	<!-- POPOP -->
-			
-		<!-- JAVASCRIPT
-		==================================================-->
-		<script src="<?php echo base_url('theme/js/jquery-2.2.4.min.js')?>"></script>
-		<script src="<?php echo base_url('theme/js/lib/arcontactus.js')?>"></script>
-    	<script src="<?php echo base_url('theme/js/lib/script.js')?>"></script>
-		<!-- <script src="<?php echo base_url('theme/js/WA.js')?>"></script> -->
-		<script src="<?php echo base_url('theme/js/jquery.easing.min.js')?>"></script>
-		<script src="<?php echo base_url('theme/js/bootstrap.min.js')?>"></script>
-		<script src="<?php echo base_url('theme/js/waypoints.min.js')?>"></script>		
-		<script src="<?php echo base_url('theme/js/jquery.scrollTo.min.js')?>"></script>
-		<script src="<?php echo base_url('theme/js/jquery.localScroll.min.js')?>"></script>
-		<script src="<?php echo base_url('theme/js/jquery.viewport.mini.js')?>"></script>
-		<script src="<?php echo base_url('theme/js/jquery.sticky.js')?>"></script>
-		<script src="<?php echo base_url('theme/js/jquery.fitvids.js')?>"></script>
-		<script src="<?php echo base_url('theme/js/jquery.parallax-1.1.3.js')?>"></script>
-		<script src="<?php echo base_url('theme/js/isotope.pkgd.min.js')?>"></script>
-		<script src="<?php echo base_url('theme/js/imagesloaded.pkgd.min.js')?>"></script> 
-		<script src="<?php echo base_url('theme/js/masonry.pkgd.min.js')?>"></script>
-		<script src="<?php echo base_url('theme/js/jquery.magnific-popup.min.js')?>"></script>
-		<script src="<?php echo base_url('theme/js/jquery.counterup.min.js')?>"></script>					
-		<script src="<?php echo base_url('theme/js/slick.min.js')?>"></script>
-		<script src="<?php echo base_url('theme/js/wow.min.js')?>"></script>		
-		<script src="<?php echo base_url('theme/js/script.js')?>"></script>
-		<script src="<?php echo base_url('theme/js/jssocials.min.js')?>"></script>	
-		<script>
-		$(document).ready(function(){
-			$(".SocialShareArticle").jsSocials({
-                    showCount: false,
-                    showLabel: true,
-                    shareIn: "popup",
-                    shares: [
-                    { share: "twitter", label: "Twitter" },
-                    { share: "facebook", label: "Facebook" },
-                    { share: "whatsapp", label: "WhatsApp" },
-                    { share: "linkedin", label: "Linked In" }
-                    ]
-            });
-		});
-	</script>
-	</body>
-</html>
+			</section>
+<?php $this->load->view('partials/foot', array(
+	'p_extrajs'    => array('jssocials.min.js'),
+	'p_footinline' => $footinline,
+)); ?>

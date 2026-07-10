@@ -15,7 +15,11 @@ class Testimonial extends CI_Controller{
 
 	function index(){
 		$x['data'] = $this->testimonial_model->get_testimonial();
-		$this->load->view('backend/v_testimonial',$x);
+		$x['title'] = 'Testimonials';
+		$x['menu'] = 'testimonial';
+		$this->load->view('backend/v_header', $x);
+		$this->load->view('backend/v_testimonial', $x);
+		$this->load->view('backend/v_footer');
 	}
 
 	function insert(){

@@ -12,34 +12,26 @@ class Post_model extends CI_Model{
 		return $result;
 	}
 
-	// function save_post($title,$contents,$category,$slug,$image,$tags,$description){
-	function save_post($title,$contents,$slug,$description){
+	function save_post($title,$contents,$slug,$description,$keyword_focus){
 		$data = array(
-	        'post_title' 	   => $title,
-	        'post_description' => $description,
-	        'post_contents'    => $contents,
-	        // 'post_image' 	   => $image,
-	        // 'post_category_id' => $category,
-	        // 'post_tags' 	   => $tags,   
-	        'post_slug' 	   => $slug,
-	        'post_status' 	   => 1,
-	        'post_user_id'	   => $this->session->userdata('id')
+	        'post_title' 	     => $title,
+	        'post_description'   => $description,
+	        'post_keyword_focus' => $keyword_focus,
+	        'post_contents'      => $contents,
+	        'post_slug' 	     => $slug,
+	        'post_status' 	     => 1,
+	        'post_user_id'	     => $this->session->userdata('id')
 		);
 		$this->db->insert('tbl_post', $data);
 	}
-
-	// function edit_post_with_img($id,$title,$contents,$category,$slug,$image,$tags,$description){
 		
-	function edit_post_with_img($id,$title,$contents,$slug,$description){
-		// $result = $this->db->query("UPDATE tbl_post SET post_title='$title',post_description='$description',post_contents='$contents',post_image='$image',post_last_update=NOW(),post_category_id='$category',post_tags='$tags',post_slug='$slug' WHERE post_id='$id'");
-		$result = $this->db->query("UPDATE tbl_post SET post_title='$title',post_description='$description',post_contents='$contents',post_last_update=NOW(),post_slug='$slug' WHERE post_id='$id'");
+	function edit_post_with_img($id,$title,$contents,$slug,$description,$keyword_focus){
+		$result = $this->db->query("UPDATE tbl_post SET post_title='$title',post_description='$description',post_keyword_focus='$keyword_focus',post_contents='$contents',post_last_update=NOW(),post_slug='$slug' WHERE post_id='$id'");
 		return $result;
 	}
 
-	// function edit_post_no_img($id,$title,$contents,$category,$slug,$tags,$description){
-	function edit_post_no_img($id,$title,$contents,$slug,$description){
-		// $result = $this->db->query("UPDATE tbl_post SET post_title='$title',post_description='$description',post_contents='$contents',post_last_update=NOW(),post_category_id='$category',post_tags='$tags',post_slug='$slug' WHERE post_id='$id'");
-		$result = $this->db->query("UPDATE tbl_post SET post_title='$title',post_description='$description',post_contents='$contents',post_last_update=NOW(),post_slug='$slug' WHERE post_id='$id'");
+	function edit_post_no_img($id,$title,$contents,$slug,$description,$keyword_focus){
+		$result = $this->db->query("UPDATE tbl_post SET post_title='$title',post_description='$description',post_keyword_focus='$keyword_focus',post_contents='$contents',post_last_update=NOW(),post_slug='$slug' WHERE post_id='$id'");
 		return $result;
 	}
 

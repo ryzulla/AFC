@@ -3,10 +3,12 @@ class Login extends CI_Controller{
 	function __construct(){
 		parent::__construct();
 		$this->load->model('backend/Login_model','login_model');
-        error_reporting(0);
 	}
 
 	function index(){
+		if($this->session->userdata('logged') == TRUE){
+			redirect('backend/dashboard');
+		}
 		$this->load->view('backend/v_login');
         $this->load->helper('text');
 	}
@@ -19,7 +21,6 @@ class Login extends CI_Controller{
             $validate_ps=$this->login_model->validasi_password($username,$password);
          	if($validate_ps->num_rows() > 0){
                 $this->session->set_userdata('logged',TRUE);
-             	$this->session->set_userdata('user',$u);
              	$x = $validate_ps->row_array();
 
              	if($x['user_level']=='1'){ //Administrator
