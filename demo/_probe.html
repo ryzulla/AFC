@@ -1,0 +1,32 @@
+<meta charset="utf-8">
+<style>body{margin:0}iframe{border:0;display:block}</style>
+<iframe id="f" src="index.html" width="390" height="3000"></iframe>
+<pre id="out">PENDING</pre>
+<script>
+function scan(){
+  try{
+    var doc = document.getElementById('f').contentDocument;
+    var win = document.getElementById('f').contentWindow;
+    var lines = [];
+    lines.push('docElem client=' + doc.documentElement.clientWidth + ' scroll=' + doc.documentElement.scrollWidth);
+    lines.push('body overflowX=' + win.getComputedStyle(doc.body).overflowX + ' html overflowX=' + win.getComputedStyle(doc.documentElement).overflowX);
+    var els = doc.querySelectorAll('*');
+    var offenders = [];
+    for (var i=0;i<els.length;i++){
+      var e = els[i];
+      if (e.scrollWidth > e.clientWidth + 2 && e.clientWidth > 0){
+        offenders.push({e:e, diff:e.scrollWidth-e.clientWidth});
+      }
+    }
+    offenders.sort(function(a,b){return b.diff-a.diff});
+    lines.push('clip containers=' + offenders.length);
+    for (var i=0;i<offenders.length && i<25;i++){
+      var e = offenders[i].e;
+      var cls = (e.className&&e.className.baseVal!==undefined?e.className.baseVal:e.className||'').toString().slice(0,110);
+      lines.push(e.tagName+' cls='+cls+' client='+e.clientWidth+' scrollW='+e.scrollWidth+' cv='+win.getComputedStyle(e).contentVisibility);
+    }
+    document.getElementById('out').textContent = lines.join('\n');
+  }catch(err){ document.getElementById('out').textContent = 'ERR '+err; }
+}
+setTimeout(scan, 8000);
+</script>
